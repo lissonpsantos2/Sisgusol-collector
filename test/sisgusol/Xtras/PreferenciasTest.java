@@ -44,11 +44,9 @@ public class PreferenciasTest {
     public void testGetPortName() {
         System.out.println("getPortName");
         Preferencias instance = new Preferencias();
-        String expResult = "";
+        String expResult = null;
         String result = instance.getPortName();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -61,8 +59,6 @@ public class PreferenciasTest {
         Integer expResult = null;
         Integer result = instance.getBaudRate();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -72,11 +68,9 @@ public class PreferenciasTest {
     public void testGetIpDoBD() {
         System.out.println("getIpDoBD");
         Preferencias instance = new Preferencias();
-        String expResult = "";
+        String expResult = null;
         String result = instance.getIpDoBD();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -86,11 +80,9 @@ public class PreferenciasTest {
     public void testGetNomeDoBD() {
         System.out.println("getNomeDoBD");
         Preferencias instance = new Preferencias();
-        String expResult = "";
+        String expResult = null;
         String result = instance.getNomeDoBD();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -100,11 +92,9 @@ public class PreferenciasTest {
     public void testGetUsuario() {
         System.out.println("getUsuario");
         Preferencias instance = new Preferencias();
-        String expResult = "";
+        String expResult = null;
         String result = instance.getUsuario();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -114,11 +104,9 @@ public class PreferenciasTest {
     public void testGetSenha() {
         System.out.println("getSenha");
         Preferencias instance = new Preferencias();
-        String expResult = "";
+        String expResult = null;
         String result = instance.getSenha();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -130,8 +118,6 @@ public class PreferenciasTest {
         String aPortName = "";
         Preferencias instance = new Preferencias();
         instance.setPortName(aPortName);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -143,8 +129,6 @@ public class PreferenciasTest {
         Integer aBaudRate = null;
         Preferencias instance = new Preferencias();
         instance.setBaudRate(aBaudRate);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -156,8 +140,6 @@ public class PreferenciasTest {
         String aIpDoBD = "";
         Preferencias instance = new Preferencias();
         instance.setIpDoBD(aIpDoBD);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -169,8 +151,6 @@ public class PreferenciasTest {
         String aNomeDoBD = "";
         Preferencias instance = new Preferencias();
         instance.setNomeDoBD(aNomeDoBD);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -182,8 +162,6 @@ public class PreferenciasTest {
         String aUsuario = "";
         Preferencias instance = new Preferencias();
         instance.setUsuario(aUsuario);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -195,8 +173,6 @@ public class PreferenciasTest {
         String aSenha = "";
         Preferencias instance = new Preferencias();
         instance.setSenha(aSenha);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }
