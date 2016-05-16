@@ -5,6 +5,7 @@ public class Preferencias {
     //Preferências de Conexão XBee
     private String portName;
     private Integer baudRate;
+    int i = 2;
     
     //Preferências Banco de Dados
     private String ipDoBD;
