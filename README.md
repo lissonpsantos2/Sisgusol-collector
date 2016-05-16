@@ -1,3 +1,5 @@
+https://travis-ci.org/lissonpsantos2/Sisgusol-collector.svg?branch=master
+
 # Sisgusol-collector
 This project contains the source code of the Sisgusol (Sistema de gerenciamento da umidade do solo), an api to connect with the XBee network and obtain the soil moisture and add it in a MySQL Database
 
