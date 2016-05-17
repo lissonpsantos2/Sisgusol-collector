@@ -2,9 +2,11 @@ package sisgusol.jframes;
 
 import com.digi.xbee.api.XBeeDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
+import com.digi.xbee.api.XBeeNetwork;
 import gnu.io.CommPortIdentifier;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +20,7 @@ public class Principal extends javax.swing.JFrame {
 
     public XBeeDevice dispositivoXbee;
     public Preferencias preferencias;
+    public Connection conexaoBD;
 
     public Principal() {
         
@@ -58,12 +61,13 @@ public class Principal extends javax.swing.JFrame {
         BDLabel = new javax.swing.JLabel();
         ipBDTextField = new javax.swing.JTextField();
         nomeDoBDTextField = new javax.swing.JTextField();
-        usuarioTextField = new javax.swing.JTextField();
-        senhaPasswordField = new javax.swing.JPasswordField();
+        usuarioBDTextField = new javax.swing.JTextField();
+        senhaBDTextField = new javax.swing.JTextField();
         redeLabel = new javax.swing.JLabel();
         relogioLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
+        detectarRedeButton = new javax.swing.JButton();
 
         avisosDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         avisosDialog.setMinimumSize(new java.awt.Dimension(297, 125));
@@ -145,11 +149,11 @@ public class Principal extends javax.swing.JFrame {
         nomeDoBDTextField.setText("Nome do BD");
         nomeDoBDTextField.setToolTipText("Nome do banco de dados");
 
-        usuarioTextField.setText("Usuário do BD");
-        usuarioTextField.setToolTipText("Usuário do banco de dados");
+        usuarioBDTextField.setText("Usuário do BD");
+        usuarioBDTextField.setToolTipText("Usuário do banco de dados");
 
-        senhaPasswordField.setText("Senha do BD");
-        senhaPasswordField.setToolTipText("Senha do Banco de Dados");
+        senhaBDTextField.setText("Senha do BD");
+        senhaBDTextField.setToolTipText("Senha do Banco de Dados");
 
         javax.swing.GroupLayout serialPortSelectionDialogLayout = new javax.swing.GroupLayout(serialPortSelectionDialog.getContentPane());
         serialPortSelectionDialog.getContentPane().setLayout(serialPortSelectionDialogLayout);
@@ -168,13 +172,13 @@ public class Principal extends javax.swing.JFrame {
                             .addGroup(serialPortSelectionDialogLayout.createSequentialGroup()
                                 .addGroup(serialPortSelectionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(baudRateComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(ipBDTextField)
+                                    .addComponent(nomeDoBDTextField)
+                                    .addComponent(usuarioBDTextField)
                                     .addGroup(serialPortSelectionDialogLayout.createSequentialGroup()
                                         .addComponent(BDLabel)
                                         .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(ipBDTextField)
-                                    .addComponent(nomeDoBDTextField)
-                                    .addComponent(usuarioTextField)
-                                    .addComponent(senhaPasswordField))
+                                    .addComponent(senhaBDTextField))
                                 .addContainerGap())))
                     .addGroup(serialPortSelectionDialogLayout.createSequentialGroup()
                         .addGroup(serialPortSelectionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,9 +219,9 @@ public class Principal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(nomeDoBDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(usuarioTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(usuarioBDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(senhaPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(senhaBDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -236,6 +240,13 @@ public class Principal extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jList1);
 
+        detectarRedeButton.setText("Detectar Rede");
+        detectarRedeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                detectarRedeButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -243,21 +254,28 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jScrollPane1)
-                        .addComponent(redeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(relogioLabel))
-                .addContainerGap(309, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane1)
+                            .addComponent(redeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 264, Short.MAX_VALUE)
+                        .addComponent(relogioLabel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(detectarRedeButton)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(redeLabel)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(redeLabel)
+                    .addComponent(relogioLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(relogioLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(detectarRedeButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -270,29 +288,52 @@ public class Principal extends javax.swing.JFrame {
 
     private void atualizarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atualizarButtonActionPerformed
         portList.setListData(descobrirPortas());
-
     }//GEN-LAST:event_atualizarButtonActionPerformed
 
     private void conectarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conectarButtonActionPerformed
         String portName = portList.getSelectedValue();
         Integer baudRate = (Integer) baudRateComboBox.getSelectedItem();
+        String nomedoBD = nomeDoBDTextField.getText();
+        String ipdoBD = ipBDTextField.getText();
+        String usuarioBD = usuarioBDTextField.getText();
+        String senhaBD = senhaBDTextField.getText();
 
         try {
             dispositivoXbee = new XBeeDevice(portName, baudRate);
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                conexaoBD = DriverManager.getConnection("jdbc:mysql://"+ipdoBD+"/"+nomedoBD, usuarioBD, senhaBD);
+                try {
+                    dispositivoXbee.open();
+                    avisosTextLabel.setText("Conexão estabelecida com sucesso.");
+                    preferencias.setBaudRate(baudRate);
+                    preferencias.setPortName(portName);
+                    preferencias.setNomeDoBD(nomedoBD);
+                    preferencias.setIpDoBD(ipdoBD);
+                    preferencias.setUsuario(usuarioBD);
+                    preferencias.setSenha(senhaBD);
+
+                    serialPortSelectionDialog.setVisible(false);
+                    this.setVisible(true);
+                    avisosDialog.setVisible(false);
+
+                } catch (XBeeException e) {
+                    avisosTextLabel.setText("ERRO: "+e.getMessage());
+                    avisosDialog.setVisible(true);
+                    dispositivoXbee.close();
+                }
+            } catch (ClassNotFoundException e) {
+                avisosTextLabel.setText("ERRO: "+e.getMessage());
+                avisosDialog.setVisible(true);
+            } catch (SQLException e) {
+                avisosTextLabel.setText("ERRO: Database unreachable");
+                avisosDialog.setVisible(true);
+            }
         } catch (NullPointerException e) {
             avisosTextLabel.setText("ERRO: "+e.getMessage());
             avisosDialog.setVisible(true);
         }
         
-        try {
-            dispositivoXbee.open();
-            avisosTextLabel.setText("Conexão estabelecida com sucesso.");
-            avisosDialog.setVisible(true);
-        } catch (XBeeException e) {
-            avisosTextLabel.setText("ERRO: "+e.getMessage());
-            avisosDialog.setVisible(true);
-            dispositivoXbee.close();
-        }
     }//GEN-LAST:event_conectarButtonActionPerformed
 
     private void cancelarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarButtonActionPerformed
@@ -302,6 +343,10 @@ public class Principal extends javax.swing.JFrame {
         serialPortSelectionDialog.dispose();
         this.dispose();
     }//GEN-LAST:event_cancelarButtonActionPerformed
+
+    private void detectarRedeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detectarRedeButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_detectarRedeButtonActionPerformed
 
     private String[] descobrirPortas() {        
         
@@ -322,6 +367,13 @@ public class Principal extends javax.swing.JFrame {
         }
         return listData;
     }
+    /*
+    private String[] descobrirRedeXBee () {
+        nomedoBD
+                ipdoBD
+                usuario
+                        senha
+    }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BDLabel;
@@ -333,6 +385,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel baudRateComboBoxLabel;
     private javax.swing.JButton cancelarButton;
     private javax.swing.JButton conectarButton;
+    private javax.swing.JButton detectarRedeButton;
     private javax.swing.JTextField ipBDTextField;
     private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -342,8 +395,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane portListScroolPanel;
     private javax.swing.JLabel redeLabel;
     private javax.swing.JLabel relogioLabel;
-    private javax.swing.JPasswordField senhaPasswordField;
+    private javax.swing.JTextField senhaBDTextField;
     private javax.swing.JDialog serialPortSelectionDialog;
-    private javax.swing.JTextField usuarioTextField;
+    private javax.swing.JTextField usuarioBDTextField;
     // End of variables declaration//GEN-END:variables
 }
