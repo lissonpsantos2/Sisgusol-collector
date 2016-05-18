@@ -12,13 +12,13 @@ public class Preferences {
     private String DBuser;
     private String DBpassword;
 
-    public Preferences(String portName, Integer baudRate, String aDBip, String aDBname, String aDBuser, String aDBpassword) {
-        this.portName = portName;
-        this.baudRate = baudRate;
-        this.DBip = aDBip;
-        this.DBname = aDBname;
-        this.DBuser = aDBuser;
-        this.DBpassword = aDBpassword;
+    public Preferences(String aPortName, Integer aBaudRate, String aDBip, String aDBname, String aDBuser, String aDBpassword) {
+        portName = aPortName;
+        baudRate = aBaudRate;
+        DBip = aDBip;
+        DBname = aDBname;
+        DBuser = aDBuser;
+        DBpassword = aDBpassword;
     }
     
     
