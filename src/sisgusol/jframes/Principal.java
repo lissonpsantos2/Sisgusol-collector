@@ -1,5 +1,6 @@
 package sisgusol.jframes;
 
+import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.XBeeDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.XBeeNetwork;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Timer;
 import sisgusol.Xtras.Preferencias;
 
@@ -19,6 +22,7 @@ import sisgusol.Xtras.Preferencias;
 public class Principal extends javax.swing.JFrame {
 
     public XBeeDevice dispositivoXbee;
+    public XBeeNetwork redeXbee;
     public Preferencias preferencias;
     public Connection conexaoBD;
 
@@ -37,9 +41,7 @@ public class Principal extends javax.swing.JFrame {
 	timer.start();
         initComponents();
         serialPortSelectionDialog.setVisible(true);
-
-
-
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -66,7 +68,7 @@ public class Principal extends javax.swing.JFrame {
         redeLabel = new javax.swing.JLabel();
         relogioLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        redeXbeeList = new javax.swing.JList<>();
         detectarRedeButton = new javax.swing.JButton();
 
         avisosDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -233,12 +235,7 @@ public class Principal extends javax.swing.JFrame {
 
         relogioLabel.setText("Relógio");
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(redeXbeeList);
 
         detectarRedeButton.setText("Detectar Rede");
         detectarRedeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -255,13 +252,13 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane1)
-                            .addComponent(redeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 264, Short.MAX_VALUE)
+                        .addComponent(redeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
                         .addComponent(relogioLabel))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(detectarRedeButton)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(detectarRedeButton)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -303,16 +300,33 @@ public class Principal extends javax.swing.JFrame {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 conexaoBD = DriverManager.getConnection("jdbc:mysql://"+ipdoBD+"/"+nomedoBD, usuarioBD, senhaBD);
+                /*
+                Statement stmt = conexaoBD.createStatement();
+                String sql = "INSERT INTO `leitura` (`chave`, `inteiro`) VALUES ('19', '20');";
+                stmt.executeUpdate(sql);
+/*
+                //STEP 5: Extract data from result set
+                while(rs.next()){
+                    //Retrieve by column name
+                    int chave  = rs.getInt("chave");
+                    int inteiro = rs.getInt("inteiro");
+
+                    //Display values
+                    System.out.print("chave: " + chave);
+                    System.out.println(", inteiro: " + inteiro);
+                }
+  */              
+                
+                
                 try {
                     dispositivoXbee.open();
-                    avisosTextLabel.setText("Conexão estabelecida com sucesso.");
                     preferencias.setBaudRate(baudRate);
                     preferencias.setPortName(portName);
                     preferencias.setNomeDoBD(nomedoBD);
                     preferencias.setIpDoBD(ipdoBD);
                     preferencias.setUsuario(usuarioBD);
                     preferencias.setSenha(senhaBD);
-
+                    avisosTextLabel.setText("Conexão estabelecida com sucesso.");
                     serialPortSelectionDialog.setVisible(false);
                     this.setVisible(true);
                     avisosDialog.setVisible(false);
@@ -345,7 +359,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelarButtonActionPerformed
 
     private void detectarRedeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detectarRedeButtonActionPerformed
-        // TODO add your handling code here:
+        redeXbeeList.setListData(descobrirRedeXBee());
     }//GEN-LAST:event_detectarRedeButtonActionPerformed
 
     private String[] descobrirPortas() {        
@@ -367,13 +381,33 @@ public class Principal extends javax.swing.JFrame {
         }
         return listData;
     }
-    /*
+    
     private String[] descobrirRedeXBee () {
-        nomedoBD
-                ipdoBD
-                usuario
-                        senha
-    }*/
+        
+        List<RemoteXBeeDevice> list;
+        String[] dispositivos;
+        dispositivos = new String[10];
+        Integer count = 0;
+        
+        redeXbee = dispositivoXbee.getNetwork();
+        
+        
+        list = redeXbee.getDevices();
+        
+        
+        for(RemoteXBeeDevice device : list) {
+            /*try {
+                device.readDeviceInfo();
+            } catch (XBeeException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            dispositivos[count] = device.getNodeID();
+            
+            count++;*/
+        }
+        System.out.println(dispositivos);
+        return dispositivos;        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BDLabel;
@@ -387,13 +421,13 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton conectarButton;
     private javax.swing.JButton detectarRedeButton;
     private javax.swing.JTextField ipBDTextField;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField nomeDoBDTextField;
     private javax.swing.JList<String> portList;
     private javax.swing.JLabel portListLabel;
     private javax.swing.JScrollPane portListScroolPanel;
     private javax.swing.JLabel redeLabel;
+    private javax.swing.JList<String> redeXbeeList;
     private javax.swing.JLabel relogioLabel;
     private javax.swing.JTextField senhaBDTextField;
     private javax.swing.JDialog serialPortSelectionDialog;
