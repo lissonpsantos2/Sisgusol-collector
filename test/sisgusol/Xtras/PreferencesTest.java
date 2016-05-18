@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author lisso
  */
-public class ConexaoBDTest {
+public class PreferencesTest {
     
-    public ConexaoBDTest() {
+    public PreferencesTest() {
     }
     
     @BeforeClass

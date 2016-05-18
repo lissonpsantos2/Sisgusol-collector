@@ -2,7 +2,7 @@
 
 <Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
-    <Container class="javax.swing.JDialog" name="avisosDialog">
+    <Container class="javax.swing.JDialog" name="warningDialog">
       <Properties>
         <Property name="defaultCloseOperation" type="int" value="2"/>
         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -17,11 +17,11 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="125" max="-2" attributes="0"/>
-                          <Component id="avisosOkButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="warningOkButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="avisosTextLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="warningTextLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace pref="125" max="32767" attributes="0"/>
@@ -32,24 +32,24 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
-                  <Component id="avisosTextLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="warningTextLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace pref="30" max="32767" attributes="0"/>
-                  <Component id="avisosOkButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="warningOkButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="avisosOkButton">
+        <Component class="javax.swing.JButton" name="warningOkButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="OK"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="avisosOkButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="warningOkButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="avisosTextLabel">
+        <Component class="javax.swing.JLabel" name="warningTextLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="Warning"/>
           </Properties>
@@ -86,14 +86,14 @@
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="baudRateComboBox" max="32767" attributes="0"/>
-                                      <Component id="ipBDTextField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="nomeDoBDTextField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="usuarioBDTextField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="DBIpTextField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="DBNameTextField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="DBUserTextField" alignment="0" max="32767" attributes="0"/>
                                       <Group type="102" attributes="0">
-                                          <Component id="BDLabel" min="-2" max="-2" attributes="0"/>
+                                          <Component id="DBLabel" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       </Group>
-                                      <Component id="senhaBDTextField" max="32767" attributes="0"/>
+                                      <Component id="DBPasswordTextField" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
@@ -102,12 +102,12 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="0" pref="13" max="32767" attributes="0"/>
-                                  <Component id="atualizarButton" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="31" max="32767" attributes="0"/>
+                                  <Component id="updatePortsListButton" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="conectarButton" min="-2" max="-2" attributes="0"/>
+                                  <Component id="connectButton" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="cancelarButton" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="portListLabel" min="-2" max="-2" attributes="0"/>
@@ -134,23 +134,23 @@
                           <Component id="portListScroolPanel" min="-2" pref="239" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="atualizarButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="conectarButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cancelarButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="updatePortsListButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="connectButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" attributes="0">
                           <Component id="baudRateComboBox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="BDLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="DBLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="ipBDTextField" min="-2" max="-2" attributes="0"/>
+                          <Component id="DBIpTextField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="nomeDoBDTextField" min="-2" max="-2" attributes="0"/>
+                          <Component id="DBNameTextField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="usuarioBDTextField" min="-2" max="-2" attributes="0"/>
+                          <Component id="DBUserTextField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="senhaBDTextField" min="-2" max="-2" attributes="0"/>
+                          <Component id="DBPasswordTextField" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -177,7 +177,7 @@
         </Container>
         <Component class="javax.swing.JLabel" name="portListLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Porta XBee:"/>
+            <Property name="text" type="java.lang.String" value="Select the Serial/USB port:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="baudRateComboBoxLabel">
@@ -185,30 +185,30 @@
             <Property name="text" type="java.lang.String" value="Baud Rate:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="atualizarButton">
+        <Component class="javax.swing.JButton" name="updatePortsListButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Atualizar"/>
-            <Property name="toolTipText" type="java.lang.String" value="Atualizar a lista de portas"/>
+            <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="toolTipText" type="java.lang.String" value="Update port list"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="atualizarButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="updatePortsListButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="conectarButton">
+        <Component class="javax.swing.JButton" name="connectButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Conectar"/>
-            <Property name="toolTipText" type="java.lang.String" value="Conectar a rede XBee"/>
+            <Property name="text" type="java.lang.String" value="Connect"/>
+            <Property name="toolTipText" type="java.lang.String" value="Connect to the XBee Network"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="conectarButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="connectButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="cancelarButton">
+        <Component class="javax.swing.JButton" name="cancelButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Cancelar"/>
+            <Property name="text" type="java.lang.String" value="Cancel"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelarButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelButtonActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="baudRateComboBox">
@@ -223,39 +223,53 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Integer&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JLabel" name="BDLabel">
+        <Component class="javax.swing.JLabel" name="DBLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Banco de Dados:"/>
+            <Property name="text" type="java.lang.String" value="Database:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="ipBDTextField">
+        <Component class="javax.swing.JTextField" name="DBIpTextField">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Ip do BD"/>
-            <Property name="toolTipText" type="java.lang.String" value="Ip do Banco de Dados"/>
+            <Property name="text" type="java.lang.String" value="127.0.0.1"/>
+            <Property name="toolTipText" type="java.lang.String" value="Database IP"/>
           </Properties>
           <AccessibilityProperties>
             <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Ip"/>
           </AccessibilityProperties>
         </Component>
-        <Component class="javax.swing.JTextField" name="nomeDoBDTextField">
+        <Component class="javax.swing.JTextField" name="DBNameTextField">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Nome do BD"/>
-            <Property name="toolTipText" type="java.lang.String" value="Nome do banco de dados"/>
+            <Property name="text" type="java.lang.String" value="test"/>
+            <Property name="toolTipText" type="java.lang.String" value="Database Name"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="usuarioBDTextField">
+        <Component class="javax.swing.JTextField" name="DBUserTextField">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Usu&#xe1;rio do BD"/>
-            <Property name="toolTipText" type="java.lang.String" value="Usu&#xe1;rio do banco de dados"/>
+            <Property name="text" type="java.lang.String" value="root"/>
+            <Property name="toolTipText" type="java.lang.String" value="Database User"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="senhaBDTextField">
+        <Component class="javax.swing.JTextField" name="DBPasswordTextField">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Senha do BD"/>
-            <Property name="toolTipText" type="java.lang.String" value="Senha do Banco de Dados"/>
+            <Property name="toolTipText" type="java.lang.String" value="Database User Password"/>
           </Properties>
         </Component>
       </SubComponents>
+    </Container>
+    <Container class="javax.swing.JDialog" name="loadXBeeNetworkDialog">
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <EmptySpace min="0" pref="400" max="32767" attributes="0"/>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <EmptySpace min="0" pref="300" max="32767" attributes="0"/>
+          </Group>
+        </DimensionLayout>
+      </Layout>
     </Container>
   </NonVisualComponents>
   <Properties>
@@ -284,14 +298,14 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="redeLabel" min="-2" pref="258" max="-2" attributes="0"/>
-                      <EmptySpace pref="136" max="32767" attributes="0"/>
-                      <Component id="relogioLabel" min="-2" max="-2" attributes="0"/>
+                      <Component id="networkLabel" min="-2" pref="258" max="-2" attributes="0"/>
+                      <EmptySpace pref="148" max="32767" attributes="0"/>
+                      <Component id="clockLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="detectarRedeButton" min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" min="-2" pref="130" max="-2" attributes="0"/>
+                          <Component id="detectNetworkButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="xbeeNetworkListScrollPane" min="-2" pref="130" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
@@ -305,34 +319,34 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="redeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="relogioLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="networkLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="clockLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" min="-2" pref="218" max="-2" attributes="0"/>
+              <Component id="xbeeNetworkListScrollPane" min="-2" pref="218" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="detectarRedeButton" min="-2" max="-2" attributes="0"/>
+              <Component id="detectNetworkButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="redeLabel">
+    <Component class="javax.swing.JLabel" name="networkLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Dispositivos XBee na Rede:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="relogioLabel">
+    <Component class="javax.swing.JLabel" name="clockLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Rel&#xf3;gio"/>
+        <Property name="text" type="java.lang.String" value="clock"/>
       </Properties>
     </Component>
-    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+    <Container class="javax.swing.JScrollPane" name="xbeeNetworkListScrollPane">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JList" name="redeXbeeList">
+        <Component class="javax.swing.JList" name="xbeeNetworkList">
           <Properties>
             <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
               <StringArray count="0"/>
@@ -344,12 +358,12 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="detectarRedeButton">
+    <Component class="javax.swing.JButton" name="detectNetworkButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Detectar Rede"/>
+        <Property name="text" type="java.lang.String" value="Detect Network"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="detectarRedeButtonActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="detectNetworkButtonActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
