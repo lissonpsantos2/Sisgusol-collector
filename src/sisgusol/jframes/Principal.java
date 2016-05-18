@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import sisgusol.Xtras.DBInterface;
 import sisgusol.Xtras.Preferences;
@@ -30,14 +31,18 @@ public class Principal extends javax.swing.JFrame {
         class ClockListener implements ActionListener {
                 @Override
 		public void actionPerformed(ActionEvent e) {
-			Date dateTime = new Date();
-                        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-			clockLabel.setText(dateTimeFormat.format(dateTime));
+                    Date dateTime = new Date();
+                    SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                    clockLabel.setText(dateTimeFormat.format(dateTime));
 		}
 	}
         Timer timer = new Timer(1000, new ClockListener());
 	timer.start();
         initComponents();
+        this.setLocationRelativeTo(null);
+        serialPortSelectionDialog.setLocationRelativeTo(null);
+        warningDialog.setLocationRelativeTo(null);
+        loadXBeeNetworkDialog.setLocationRelativeTo(null);
         serialPortSelectionDialog.setVisible(true);
         
     }
@@ -64,6 +69,8 @@ public class Principal extends javax.swing.JFrame {
         DBUserTextField = new javax.swing.JTextField();
         DBPasswordTextField = new javax.swing.JTextField();
         loadXBeeNetworkDialog = new javax.swing.JDialog();
+        loadingTextLabel = new javax.swing.JLabel();
+        loadingProgressBar = new javax.swing.JProgressBar();
         networkLabel = new javax.swing.JLabel();
         clockLabel = new javax.swing.JLabel();
         xbeeNetworkListScrollPane = new javax.swing.JScrollPane();
@@ -106,7 +113,7 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        serialPortSelectionDialog.setLocation(new java.awt.Point(400, 300));
+        serialPortSelectionDialog.setLocation(new java.awt.Point(300, 400));
         serialPortSelectionDialog.setMinimumSize(new java.awt.Dimension(308, 350));
 
         portListScroolPanel.setViewportView(portList);
@@ -227,15 +234,32 @@ public class Principal extends javax.swing.JFrame {
 
         DBIpTextField.getAccessibleContext().setAccessibleName("Ip");
 
+        loadXBeeNetworkDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        loadXBeeNetworkDialog.setMinimumSize(new java.awt.Dimension(297, 125));
+
+        loadingTextLabel.setText("Loading XBee data parameters...");
+
         javax.swing.GroupLayout loadXBeeNetworkDialogLayout = new javax.swing.GroupLayout(loadXBeeNetworkDialog.getContentPane());
         loadXBeeNetworkDialog.getContentPane().setLayout(loadXBeeNetworkDialogLayout);
         loadXBeeNetworkDialogLayout.setHorizontalGroup(
             loadXBeeNetworkDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(loadXBeeNetworkDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(loadXBeeNetworkDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(loadXBeeNetworkDialogLayout.createSequentialGroup()
+                        .addComponent(loadingTextLabel)
+                        .addGap(0, 118, Short.MAX_VALUE))
+                    .addComponent(loadingProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         loadXBeeNetworkDialogLayout.setVerticalGroup(
             loadXBeeNetworkDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loadXBeeNetworkDialogLayout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(loadingTextLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(loadingProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -293,7 +317,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_warningOkButtonActionPerformed
 
     private void updatePortsListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatePortsListButtonActionPerformed
-        portList.setListData(descobrirPortas());
+        portList.setListData(discoverPorts());
     }//GEN-LAST:event_updatePortsListButtonActionPerformed
 
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
@@ -308,64 +332,77 @@ public class Principal extends javax.swing.JFrame {
             device = new XBeeDevice(portName, baudRate);
             try {
                 database = new DBInterface(DBip, DBname, DBuser, DBpassword);
-                /*
-                Statement stmt = conexaoBD.createStatement();
-                String sql = "INSERT INTO `leitura` (`chave`, `inteiro`) VALUES ('19', '20');";
-                stmt.executeUpdate(sql);
-/*
-                //STEP 5: Extract data from result set
-                while(rs.next()){
-                    //Retrieve by column name
-                    int chave  = rs.getInt("chave");
-                    int inteiro = rs.getInt("inteiro");
-
-                    //Display values
-                    System.out.print("chave: " + chave);
-                    System.out.println(", inteiro: " + inteiro);
-                }
-  */              
-                
-                
                 try {
                     device.open();
                     preferences = new Preferences(portName, baudRate, DBip, DBip, DBuser, DBip);
-                    warningTextLabel.setText("Conexão estabelecida com sucesso.");
-                    serialPortSelectionDialog.setVisible(false);
-                    this.setVisible(true);
-                    warningDialog.setVisible(false);
-
-                } catch (XBeeException e) {
-                    warningTextLabel.setText("ERRO: "+e.getMessage());
-                    warningDialog.setVisible(true);
+                    loadXBeeNetworkDialog.setVisible(true);
+                    deviceNetworkInfoUpdate();
+                } catch (XBeeException eXB) {
+                    showWarningDialog("ERROR: "+eXB.getMessage());
                     device.close();
                 }
-            } catch (ClassNotFoundException e) {
-                warningTextLabel.setText("ERRO: "+e.getMessage());
-                warningDialog.setVisible(true);
-            } catch (SQLException e) {
-                warningTextLabel.setText("ERRO: Database unreachable");
-                warningDialog.setVisible(true);
+            } catch (ClassNotFoundException eCNF) {
+                showWarningDialog("ERROR: "+eCNF.getMessage());
+            } catch (SQLException eSQL) {
+                showWarningDialog("ERROR: Database unreachable");
             }
-        } catch (NullPointerException e) {
-            warningTextLabel.setText("ERRO: "+e.getMessage());
-            warningDialog.setVisible(true);
+        } catch (NullPointerException eNPE) {
+            showWarningDialog("ERROR: "+eNPE.getMessage());
         }
-        
     }//GEN-LAST:event_connectButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        // LEMBRAR DE ALTERAR ESTA LINHA PARA O FECHAMENTO DO MENU
-        //avisosDialog.;
         warningDialog.dispose();
         serialPortSelectionDialog.dispose();
+        loadXBeeNetworkDialog.dispose();
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void detectNetworkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detectNetworkButtonActionPerformed
-        xbeeNetworkList.setListData(descobrirRedeXBee());
+        xbeeNetworkList.setListData(discoverXBeeNetwork());
     }//GEN-LAST:event_detectNetworkButtonActionPerformed
 
-    private String[] descobrirPortas() {        
+    private void showWarningDialog (String message) {
+        warningTextLabel.setText(message);
+        warningDialog.setVisible(true);  
+    }
+    
+    private void showPrincipal () {
+        this.setVisible(true);
+    }
+    
+    private void deviceNetworkInfoUpdate () {
+        
+        loadingProgressBar.setMinimum(0);
+        loadingProgressBar.setMaximum(100);
+        loadingProgressBar.setValue(0);
+        network = device.getNetwork();
+       
+        final SwingWorker w = new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                for (int i = 0; i <= 100; i++) {
+                    try {
+                        loadingProgressBar.setValue(i);
+                        Thread.sleep(50);
+                    } catch (InterruptedException ex) {
+                        showWarningDialog("ERROR: "+ex.getMessage());
+                    }
+                }
+                return 0;
+            }
+            @Override
+            protected void done () {
+                serialPortSelectionDialog.setVisible(false);
+                loadXBeeNetworkDialog.setVisible(false);
+                showPrincipal();
+            }
+        };
+        w.execute();
+        
+    }
+    
+    private String[] discoverPorts() {        
         
         List<String> list = new ArrayList<>();
         String[] listData = new String[10];
@@ -385,30 +422,21 @@ public class Principal extends javax.swing.JFrame {
         return listData;
     }
     
-    private String[] descobrirRedeXBee () {
+    private String[] discoverXBeeNetwork () {
         
         List<RemoteXBeeDevice> list;
-        String[] dispositivos;
-        dispositivos = new String[10];
-        Integer count = 0;
-        
-        network = device.getNetwork();
-        
+        String[] dispositivos = new String[10];
         
         list = network.getDevices();
         
-        
-        for(RemoteXBeeDevice device : list) {
+        for(int i = 0; i < list.size(); i++) {
             try {
-                device.readDeviceInfo();
+                list.get(i).readDeviceInfo();
             } catch (XBeeException e) {
                 warningTextLabel.setText("ERROR: "+e.getMessage());
             }
-            dispositivos[count] = device.getNodeID();
-            
-            count++;
+            dispositivos[i] = list.get(i).getNodeID();
         }
-        System.out.println(dispositivos);
         return dispositivos;        
     }
 
@@ -425,6 +453,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton connectButton;
     private javax.swing.JButton detectNetworkButton;
     private javax.swing.JDialog loadXBeeNetworkDialog;
+    private javax.swing.JProgressBar loadingProgressBar;
+    public javax.swing.JLabel loadingTextLabel;
     private javax.swing.JLabel networkLabel;
     private javax.swing.JList<String> portList;
     private javax.swing.JLabel portListLabel;
