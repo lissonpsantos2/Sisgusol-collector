@@ -334,17 +334,39 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <Component id="networkLabel" min="-2" pref="258" max="-2" attributes="0"/>
-                      <EmptySpace pref="148" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="clockLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
+                      <Component id="detectNetworkButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="startAcquisitionButton1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="stopAcquisitionButton" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="xbeeNetworkListScrollPane" min="-2" pref="130" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="detectNetworkButton" min="-2" max="-2" attributes="0"/>
-                          <Component id="xbeeNetworkListScrollPane" min="-2" pref="130" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="nodeIDLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="nodeIDLabelResp" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="89" max="32767" attributes="0"/>
+                              <Component id="acqStatusLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="acqStatusLabelResp" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="nodeMACLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="nodeMACLabellResp" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="jScrollPane1" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -360,9 +382,30 @@
                   <Component id="clockLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="xbeeNetworkListScrollPane" min="-2" pref="218" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="xbeeNetworkListScrollPane" min="-2" pref="218" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="nodeIDLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="nodeIDLabelResp" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="acqStatusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="acqStatusLabelResp" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="nodeMACLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="nodeMACLabellResp" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jScrollPane1" min="-2" pref="173" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="detectNetworkButton" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="detectNetworkButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="startAcquisitionButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="stopAcquisitionButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -389,6 +432,9 @@
               <StringArray count="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="xbeeNetworkListValueChanged"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -403,5 +449,63 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="detectNetworkButtonActionPerformed"/>
       </Events>
     </Component>
+    <Component class="javax.swing.JButton" name="startAcquisitionButton1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Start Acquisition"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="nodeIDLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Node ID:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="acqStatusLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Acquisition Status:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="nodeMACLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Node MAC:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="nodeIDLabelResp">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="NULL"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="acqStatusLabelResp">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="OFF"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="stopAcquisitionButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Stop Acquisition"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="stopAcquisitionButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="nodeMACLabellResp">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="NULL"/>
+      </Properties>
+    </Component>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTextArea" name="jTextArea1">
+          <Properties>
+            <Property name="columns" type="int" value="20"/>
+            <Property name="rows" type="int" value="5"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>

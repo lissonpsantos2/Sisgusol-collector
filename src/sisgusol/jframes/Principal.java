@@ -5,14 +5,18 @@ import com.digi.xbee.api.XBeeDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.XBeeNetwork;
 import gnu.io.CommPortIdentifier;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import sisgusol.Xtras.DBInterface;
@@ -76,6 +80,16 @@ public class Principal extends javax.swing.JFrame {
         xbeeNetworkListScrollPane = new javax.swing.JScrollPane();
         xbeeNetworkList = new javax.swing.JList<>();
         detectNetworkButton = new javax.swing.JButton();
+        startAcquisitionButton1 = new javax.swing.JButton();
+        nodeIDLabel = new javax.swing.JLabel();
+        acqStatusLabel = new javax.swing.JLabel();
+        nodeMACLabel = new javax.swing.JLabel();
+        nodeIDLabelResp = new javax.swing.JLabel();
+        acqStatusLabelResp = new javax.swing.JLabel();
+        stopAcquisitionButton = new javax.swing.JButton();
+        nodeMACLabellResp = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         warningDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         warningDialog.setMinimumSize(new java.awt.Dimension(297, 125));
@@ -268,6 +282,11 @@ public class Principal extends javax.swing.JFrame {
 
         clockLabel.setText("clock");
 
+        xbeeNetworkList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                xbeeNetworkListValueChanged(evt);
+            }
+        });
         xbeeNetworkListScrollPane.setViewportView(xbeeNetworkList);
 
         detectNetworkButton.setText("Detect Network");
@@ -276,6 +295,31 @@ public class Principal extends javax.swing.JFrame {
                 detectNetworkButtonActionPerformed(evt);
             }
         });
+
+        startAcquisitionButton1.setText("Start Acquisition");
+
+        nodeIDLabel.setText("Node ID:");
+
+        acqStatusLabel.setText("Acquisition Status:");
+
+        nodeMACLabel.setText("Node MAC:");
+
+        nodeIDLabelResp.setText("NULL");
+
+        acqStatusLabelResp.setText("OFF");
+
+        stopAcquisitionButton.setText("Stop Acquisition");
+        stopAcquisitionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopAcquisitionButtonActionPerformed(evt);
+            }
+        });
+
+        nodeMACLabellResp.setText("NULL");
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -286,13 +330,32 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(networkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 148, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(clockLabel))
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(detectNetworkButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(startAcquisitionButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(stopAcquisitionButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(xbeeNetworkListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(detectNetworkButton)
-                            .addComponent(xbeeNetworkListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(nodeIDLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(nodeIDLabelResp)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                                .addComponent(acqStatusLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(acqStatusLabelResp))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(nodeMACLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(nodeMACLabellResp)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -303,9 +366,25 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(networkLabel)
                     .addComponent(clockLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(xbeeNetworkListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(xbeeNetworkListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(nodeIDLabel)
+                            .addComponent(nodeIDLabelResp)
+                            .addComponent(acqStatusLabel)
+                            .addComponent(acqStatusLabelResp))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(nodeMACLabel)
+                            .addComponent(nodeMACLabellResp))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(detectNetworkButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(detectNetworkButton)
+                    .addComponent(startAcquisitionButton1)
+                    .addComponent(stopAcquisitionButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -362,6 +441,37 @@ public class Principal extends javax.swing.JFrame {
         xbeeNetworkList.setListData(discoverXBeeNetwork());
     }//GEN-LAST:event_detectNetworkButtonActionPerformed
 
+    private void xbeeNetworkListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_xbeeNetworkListValueChanged
+        if (xbeeNetworkList.getSelectedValue()==null) {
+            nodeIDLabelResp.setText(null);
+            nodeMACLabellResp.setText(null);
+            acqStatusLabelResp.setText(null);
+        }
+        else {
+            nodeIDLabelResp.setText(xbeeNetworkList.getSelectedValue());
+            nodeMACLabellResp.setText(network.getDevice(xbeeNetworkList.getSelectedValue()).get64BitAddress().toString());
+            
+            acqStatusLabelResp.setForeground(Color.red);
+        }
+    }//GEN-LAST:event_xbeeNetworkListValueChanged
+
+    private void stopAcquisitionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopAcquisitionButtonActionPerformed
+        final String hora = clockLabel.getText();
+        final byte[] dataToSend = hora.getBytes();
+        
+
+        
+                
+                
+        try {
+            device.sendBroadcastData(dataToSend);
+        } catch (XBeeException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(Arrays.toString(dataToSend));
+        System.out.println(hora);
+    }//GEN-LAST:event_stopAcquisitionButtonActionPerformed
+
     private void showWarningDialog (String message) {
         warningTextLabel.setText(message);
         warningDialog.setVisible(true);  
@@ -377,7 +487,13 @@ public class Principal extends javax.swing.JFrame {
         loadingProgressBar.setMaximum(100);
         loadingProgressBar.setValue(0);
         network = device.getNetwork();
-       
+        try {
+            network.setDiscoveryTimeout(5000);
+        } catch (XBeeException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        network.startDiscoveryProcess();
+        
         final SwingWorker w = new SwingWorker() {
             @Override
             protected Object doInBackground() throws Exception {
@@ -396,10 +512,11 @@ public class Principal extends javax.swing.JFrame {
                 serialPortSelectionDialog.setVisible(false);
                 loadXBeeNetworkDialog.setVisible(false);
                 showPrincipal();
+                network.stopDiscoveryProcess();
+                network.get
             }
         };
-        w.execute();
-        
+        w.execute();        
     }
     
     private String[] discoverPorts() {        
@@ -432,12 +549,20 @@ public class Principal extends javax.swing.JFrame {
         for(int i = 0; i < list.size(); i++) {
             try {
                 list.get(i).readDeviceInfo();
+                System.out.println(list.get(i));
             } catch (XBeeException e) {
                 warningTextLabel.setText("ERROR: "+e.getMessage());
             }
             dispositivos[i] = list.get(i).getNodeID();
         }
         return dispositivos;        
+    }
+    
+    private Boolean getAcqStatus () {
+        Boolean status=false;
+        
+        
+        return status;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -446,20 +571,30 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField DBNameTextField;
     private javax.swing.JTextField DBPasswordTextField;
     private javax.swing.JTextField DBUserTextField;
+    private javax.swing.JLabel acqStatusLabel;
+    private javax.swing.JLabel acqStatusLabelResp;
     private javax.swing.JComboBox<Integer> baudRateComboBox;
     private javax.swing.JLabel baudRateComboBoxLabel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel clockLabel;
     private javax.swing.JButton connectButton;
     private javax.swing.JButton detectNetworkButton;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JDialog loadXBeeNetworkDialog;
     private javax.swing.JProgressBar loadingProgressBar;
     public javax.swing.JLabel loadingTextLabel;
     private javax.swing.JLabel networkLabel;
+    private javax.swing.JLabel nodeIDLabel;
+    private javax.swing.JLabel nodeIDLabelResp;
+    private javax.swing.JLabel nodeMACLabel;
+    private javax.swing.JLabel nodeMACLabellResp;
     private javax.swing.JList<String> portList;
     private javax.swing.JLabel portListLabel;
     private javax.swing.JScrollPane portListScroolPanel;
     private javax.swing.JDialog serialPortSelectionDialog;
+    private javax.swing.JButton startAcquisitionButton1;
+    private javax.swing.JButton stopAcquisitionButton;
     private javax.swing.JButton updatePortsListButton;
     private javax.swing.JDialog warningDialog;
     private javax.swing.JButton warningOkButton;
