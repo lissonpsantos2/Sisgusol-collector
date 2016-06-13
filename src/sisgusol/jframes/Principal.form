@@ -242,7 +242,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="DBNameTextField">
           <Properties>
-            <Property name="text" type="java.lang.String" value="test"/>
+            <Property name="text" type="java.lang.String" value="sisgusol"/>
             <Property name="toolTipText" type="java.lang.String" value="Database Name"/>
           </Properties>
         </Component>
@@ -342,7 +342,7 @@
                   <Group type="102" attributes="0">
                       <Component id="detectNetworkButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="startAcquisitionButton1" min="-2" max="-2" attributes="0"/>
+                      <Component id="startAcquisitionButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="stopAcquisitionButton" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -403,7 +403,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="detectNetworkButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="startAcquisitionButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="startAcquisitionButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="stopAcquisitionButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -449,10 +449,13 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="detectNetworkButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="startAcquisitionButton1">
+    <Component class="javax.swing.JButton" name="startAcquisitionButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Start Acquisition"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="startAcquisitionButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="nodeIDLabel">
       <Properties>
@@ -501,6 +504,9 @@
       <SubComponents>
         <Component class="javax.swing.JTextArea" name="jTextArea1">
           <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="f0" green="f0" red="f0" type="rgb"/>
+            </Property>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
           </Properties>
