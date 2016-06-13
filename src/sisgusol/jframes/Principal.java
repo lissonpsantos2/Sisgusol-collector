@@ -4,6 +4,7 @@ import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.XBeeDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.XBeeNetwork;
+import com.digi.xbee.api.models.XBeeMessage;
 import gnu.io.CommPortIdentifier;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -80,7 +81,7 @@ public class Principal extends javax.swing.JFrame {
         xbeeNetworkListScrollPane = new javax.swing.JScrollPane();
         xbeeNetworkList = new javax.swing.JList<>();
         detectNetworkButton = new javax.swing.JButton();
-        startAcquisitionButton1 = new javax.swing.JButton();
+        startAcquisitionButton = new javax.swing.JButton();
         nodeIDLabel = new javax.swing.JLabel();
         acqStatusLabel = new javax.swing.JLabel();
         nodeMACLabel = new javax.swing.JLabel();
@@ -168,7 +169,7 @@ public class Principal extends javax.swing.JFrame {
         DBIpTextField.setText("127.0.0.1");
         DBIpTextField.setToolTipText("Database IP");
 
-        DBNameTextField.setText("test");
+        DBNameTextField.setText("sisgusol");
         DBNameTextField.setToolTipText("Database Name");
 
         DBUserTextField.setText("root");
@@ -296,7 +297,12 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
-        startAcquisitionButton1.setText("Start Acquisition");
+        startAcquisitionButton.setText("Start Acquisition");
+        startAcquisitionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startAcquisitionButtonActionPerformed(evt);
+            }
+        });
 
         nodeIDLabel.setText("Node ID:");
 
@@ -317,6 +323,7 @@ public class Principal extends javax.swing.JFrame {
 
         nodeMACLabellResp.setText("NULL");
 
+        jTextArea1.setBackground(new java.awt.Color(240, 240, 240));
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
@@ -335,7 +342,7 @@ public class Principal extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(detectNetworkButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(startAcquisitionButton1)
+                        .addComponent(startAcquisitionButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(stopAcquisitionButton))
                     .addGroup(layout.createSequentialGroup()
@@ -383,7 +390,7 @@ public class Principal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(detectNetworkButton)
-                    .addComponent(startAcquisitionButton1)
+                    .addComponent(startAcquisitionButton)
                     .addComponent(stopAcquisitionButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -414,8 +421,8 @@ public class Principal extends javax.swing.JFrame {
                 try {
                     device.open();
                     preferences = new Preferences(portName, baudRate, DBip, DBip, DBuser, DBip);
-                    loadXBeeNetworkDialog.setVisible(true);
-                    deviceNetworkInfoUpdate();
+                    serialPortSelectionDialog.setVisible(false);
+                    showPrincipal();
                 } catch (XBeeException eXB) {
                     showWarningDialog("ERROR: "+eXB.getMessage());
                     device.close();
@@ -438,7 +445,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void detectNetworkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detectNetworkButtonActionPerformed
-        xbeeNetworkList.setListData(discoverXBeeNetwork());
+        deviceNetworkInfoUpdate();
     }//GEN-LAST:event_detectNetworkButtonActionPerformed
 
     private void xbeeNetworkListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_xbeeNetworkListValueChanged
@@ -456,7 +463,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_xbeeNetworkListValueChanged
 
     private void stopAcquisitionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopAcquisitionButtonActionPerformed
-        final String hora = clockLabel.getText();
+        /*final String hora = clockLabel.getText();
         final byte[] dataToSend = hora.getBytes();
         
 
@@ -469,8 +476,17 @@ public class Principal extends javax.swing.JFrame {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println(Arrays.toString(dataToSend));
-        System.out.println(hora);
+        System.out.println(hora);*/
     }//GEN-LAST:event_stopAcquisitionButtonActionPerformed
+
+    private void startAcquisitionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startAcquisitionButtonActionPerformed
+        startAcquisitionButton.setEnabled(false);
+        stopAcquisitionButton.setEnabled(true);
+        
+        XBeeMessage message = device.readData();
+        //message.
+        
+    }//GEN-LAST:event_startAcquisitionButtonActionPerformed
 
     private void showWarningDialog (String message) {
         warningTextLabel.setText(message);
@@ -483,6 +499,7 @@ public class Principal extends javax.swing.JFrame {
     
     private void deviceNetworkInfoUpdate () {
         
+        loadXBeeNetworkDialog.setVisible(true);
         loadingProgressBar.setMinimum(0);
         loadingProgressBar.setMaximum(100);
         loadingProgressBar.setValue(0);
@@ -509,14 +526,12 @@ public class Principal extends javax.swing.JFrame {
             }
             @Override
             protected void done () {
-                serialPortSelectionDialog.setVisible(false);
-                loadXBeeNetworkDialog.setVisible(false);
-                showPrincipal();
                 network.stopDiscoveryProcess();
-                network.get
+                loadXBeeNetworkDialog.setVisible(false);
+                xbeeNetworkList.setListData(discoverXBeeNetwork());
             }
         };
-        w.execute();        
+        w.execute();
     }
     
     private String[] discoverPorts() {        
@@ -593,7 +608,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel portListLabel;
     private javax.swing.JScrollPane portListScroolPanel;
     private javax.swing.JDialog serialPortSelectionDialog;
-    private javax.swing.JButton startAcquisitionButton1;
+    private javax.swing.JButton startAcquisitionButton;
     private javax.swing.JButton stopAcquisitionButton;
     private javax.swing.JButton updatePortsListButton;
     private javax.swing.JDialog warningDialog;
