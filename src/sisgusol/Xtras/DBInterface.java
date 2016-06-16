@@ -9,11 +9,26 @@ import java.sql.*;
 
 public class DBInterface {
     public Connection DBconnection;
+    private final Statement stmt;
     
     public DBInterface (String DBip, String DBname, String DBuser, String DBpassword) throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
         DBconnection = DriverManager.getConnection("jdbc:mysql://"+DBip+"/"+DBname, DBuser, DBpassword);
+        stmt = DBconnection.createStatement();
     
     }    
+    
+    public void createTable (String sql) throws SQLException {
+        stmt.executeUpdate(sql);
+    }
+    
+    public ResultSet select (String sql) throws SQLException {
+        ResultSet rs = stmt.executeQuery(sql);
+        return rs;
+    }
+    
+    public void insert (String sql) throws SQLException {
+        stmt.executeUpdate(sql);
+    }
     
 }

@@ -4,6 +4,7 @@ import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.XBeeDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.XBeeNetwork;
+import com.digi.xbee.api.listeners.IDataReceiveListener;
 import com.digi.xbee.api.models.XBeeMessage;
 import gnu.io.CommPortIdentifier;
 import java.awt.Color;
@@ -12,7 +13,6 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -21,29 +21,37 @@ import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import sisgusol.Xtras.DBInterface;
-import sisgusol.Xtras.Preferences;
-
+import sisgusol.Xtras.Measure;
 
 public class Principal extends javax.swing.JFrame {
 
     public XBeeDevice device;
     public XBeeNetwork network;
     public DBInterface database;
-    public Preferences preferences;
-
+    public Measure measure;
+    public IDataReceiveListener dataReceive;
+    
     public Principal() {
         
+        measure = new Measure();
+        dataReceive = new IDataReceiveListener() {
+            @Override
+            public void dataReceived(XBeeMessage xbm) {
+                System.out.println(xbm.getDevice().getNodeID()+xbm.getDataString());
+            }
+        };
+        
         class ClockListener implements ActionListener {
-                @Override
-		public void actionPerformed(ActionEvent e) {
-                    Date dateTime = new Date();
-                    SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-                    clockLabel.setText(dateTimeFormat.format(dateTime));
-		}
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Date dateTime = new Date();
+                SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                clockLabel.setText(dateTimeFormat.format(dateTime));
+            }
 	}
         Timer timer = new Timer(1000, new ClockListener());
 	timer.start();
-        initComponents();
+        initComponents();        
         this.setLocationRelativeTo(null);
         serialPortSelectionDialog.setLocationRelativeTo(null);
         warningDialog.setLocationRelativeTo(null);
@@ -418,9 +426,9 @@ public class Principal extends javax.swing.JFrame {
             device = new XBeeDevice(portName, baudRate);
             try {
                 database = new DBInterface(DBip, DBname, DBuser, DBpassword);
+                measure.createDB(database);
                 try {
                     device.open();
-                    preferences = new Preferences(portName, baudRate, DBip, DBip, DBuser, DBip);
                     serialPortSelectionDialog.setVisible(false);
                     showPrincipal();
                 } catch (XBeeException eXB) {
@@ -430,7 +438,7 @@ public class Principal extends javax.swing.JFrame {
             } catch (ClassNotFoundException eCNF) {
                 showWarningDialog("ERROR: "+eCNF.getMessage());
             } catch (SQLException eSQL) {
-                showWarningDialog("ERROR: Database unreachable");
+                showWarningDialog("ERROR: Database unreachable"+ eSQL.getMessage());
             }
         } catch (NullPointerException eNPE) {
             showWarningDialog("ERROR: "+eNPE.getMessage());
@@ -481,11 +489,8 @@ public class Principal extends javax.swing.JFrame {
 
     private void startAcquisitionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startAcquisitionButtonActionPerformed
         startAcquisitionButton.setEnabled(false);
-        stopAcquisitionButton.setEnabled(true);
-        
-        XBeeMessage message = device.readData();
-        //message.
-        
+        stopAcquisitionButton.setEnabled(true);        
+        device.addDataListener(dataReceive);
     }//GEN-LAST:event_startAcquisitionButtonActionPerformed
 
     private void showWarningDialog (String message) {
@@ -573,13 +578,6 @@ public class Principal extends javax.swing.JFrame {
         return dispositivos;        
     }
     
-    private Boolean getAcqStatus () {
-        Boolean status=false;
-        
-        
-        return status;
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField DBIpTextField;
     private javax.swing.JLabel DBLabel;
