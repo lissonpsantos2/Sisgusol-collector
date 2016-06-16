@@ -1,71 +1,47 @@
 package sisgusol.Xtras;
 
-import com.digi.xbee.api.models.XBeeMessage;
 import java.util.Date;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 
 public class Measure {
-    private String NodeID;
+    private String nodeID;
     private String depth;
-    private Float measure;
-    private Date dateTime;
+    private String address64Bit;
+    private String measure;
+    private String dateTime;
 
     public Measure() {
     }
-    
-    public String getNodeID() {
-        return NodeID;
-    }
 
-    public String getDepth() {
-        return depth;
-    }
-
-    public Float getMeasure() {
-        return measure;
-    }
-
-    public Date getDateTime() {
-        return dateTime;
-    }
-
-    public void setNodeID(String NodeID) {
-        this.NodeID = NodeID;
-    }
-
-    public void setDepth(String depth) {
+    public void setData(String NodeID, String depth, String Address64Bit, String measure, Date dateTime) {
+        this.nodeID = NodeID;
         this.depth = depth;
-    }
-
-    public void setMeasure(Float measure) {
+        this.address64Bit = Address64Bit;
         this.measure = measure;
-    }
-
-    public void setDateTime(Date dateTime) {
-        this.dateTime = dateTime;
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.dateTime = dateTimeFormat.format(dateTime);
     }
     
     public void createDB (DBInterface database) throws SQLException {
-        database.createTable("CREATE TABLE IF NOT EXISTS `sisgusol`.`measurements` ("
+        database.createTable("CREATE TABLE IF NOT EXISTS `sisgusol`.`measurement` ("
                             + " `DATE_TIME` DATETIME NOT NULL ,"
-                            + " `NODE_ID` VARCHAR(8) NOT NULL ,"
-                            + " `64BIT_ADDRESS` VARCHAR(16) NOT NULL ,"
+                            + " `NODE_ID` VARCHAR(10) NOT NULL ,"
+                            + " `64BIT_ADDRESS` VARCHAR(20) NOT NULL ,"
                             + " `DEPTH` INT NOT NULL ,"
                             + " `MEASURE` FLOAT NOT NULL ,"
                             + " PRIMARY KEY (`DATE_TIME`, `NODE_ID`));");
     }
     
-    public void insertIntoDB (DBInterface database, XBeeMessage xbm, Date dateTime) throws SQLException {
-        //String data[2] = 
-        
-        
-        database.insert("INSERT INTO `sisgusol`.`measurements` (`DATE_TIME`,`NODE_ID`,`64BIT_ADDRESS`,`DEPTH`,`MEASURE`)"+"("
-                        +dateTime+","
-                        +xbm.getDevice().getNodeID()+","
-                        +xbm.getDevice().get64BitAddress().toString()+","
-                        +
-             ")");
+    public void insertIntoDB (DBInterface database) throws SQLException {
+        database.insert("INSERT INTO `sisgusol`.`measurement` "
+                        +"VALUES ('"
+                        +dateTime+"', '"
+                        +nodeID+"', '"
+                        +address64Bit+"', "
+                        +depth+", "
+                        +measure
+                        +")");
+        System.out.println(dateTime+"---"+nodeID+"---"+address64Bit+"---"+depth+"---"+measure);
     }
-    
-    
 }
