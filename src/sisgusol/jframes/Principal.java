@@ -10,6 +10,7 @@ import gnu.io.CommPortIdentifier;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import static java.lang.Float.parseFloat;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,7 +38,18 @@ public class Principal extends javax.swing.JFrame {
         dataReceive = new IDataReceiveListener() {
             @Override
             public void dataReceived(XBeeMessage xbm) {
-                System.out.println(xbm.getDevice().getNodeID()+xbm.getDataString());
+                String data[] = xbm.getDataString().split(" ");
+                
+                measure.setData(xbm.getDevice().getNodeID(),                    //NODE ID
+                                data[1],                                        //DEPTH
+                                xbm.getDevice().get64BitAddress().toString(),   //64BITADDRESS
+                                data[0],                                        //MEASUREMENT
+                                new Date());                                    //DATE
+                try {
+                    measure.insertIntoDB(database);
+                } catch (SQLException eSQL) {
+                    showWarningDialog("ERROR: "+ eSQL.getMessage());
+                }
             }
         };
         
@@ -438,7 +450,7 @@ public class Principal extends javax.swing.JFrame {
             } catch (ClassNotFoundException eCNF) {
                 showWarningDialog("ERROR: "+eCNF.getMessage());
             } catch (SQLException eSQL) {
-                showWarningDialog("ERROR: Database unreachable"+ eSQL.getMessage());
+                showWarningDialog("ERROR: Database unreachable");
             }
         } catch (NullPointerException eNPE) {
             showWarningDialog("ERROR: "+eNPE.getMessage());
