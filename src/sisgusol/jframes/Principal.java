@@ -217,10 +217,10 @@ public class Principal extends javax.swing.JFrame {
                                     .addComponent(DBIpTextField)
                                     .addComponent(DBNameTextField)
                                     .addComponent(DBUserTextField)
+                                    .addComponent(DBPasswordTextField)
                                     .addGroup(serialPortSelectionDialogLayout.createSequentialGroup()
                                         .addComponent(DBLabel)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(DBPasswordTextField))
+                                        .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())))
                     .addGroup(serialPortSelectionDialogLayout.createSequentialGroup()
                         .addGroup(serialPortSelectionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -450,7 +450,7 @@ public class Principal extends javax.swing.JFrame {
             } catch (ClassNotFoundException eCNF) {
                 showWarningDialog("ERROR: "+eCNF.getMessage());
             } catch (SQLException eSQL) {
-                showWarningDialog("ERROR: Database unreachable");
+                showWarningDialog("ERROR: Database unreachable  "+eSQL.getMessage());
             }
         } catch (NullPointerException eNPE) {
             showWarningDialog("ERROR: "+eNPE.getMessage());
@@ -469,39 +469,27 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_detectNetworkButtonActionPerformed
 
     private void xbeeNetworkListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_xbeeNetworkListValueChanged
-        if (xbeeNetworkList.getSelectedValue()==null) {
+        if (xbeeNetworkList.getSelectedValue() == null) {
             nodeIDLabelResp.setText(null);
             nodeMACLabellResp.setText(null);
             acqStatusLabelResp.setText(null);
         }
         else {
             nodeIDLabelResp.setText(xbeeNetworkList.getSelectedValue());
-            nodeMACLabellResp.setText(network.getDevice(xbeeNetworkList.getSelectedValue()).get64BitAddress().toString());
-            
+            nodeMACLabellResp.setText(network.getDevice(xbeeNetworkList.getSelectedValue()).get64BitAddress().toString());            
             acqStatusLabelResp.setForeground(Color.red);
         }
     }//GEN-LAST:event_xbeeNetworkListValueChanged
 
     private void stopAcquisitionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopAcquisitionButtonActionPerformed
-        /*final String hora = clockLabel.getText();
-        final byte[] dataToSend = hora.getBytes();
-        
-
-        
-                
-                
-        try {
-            device.sendBroadcastData(dataToSend);
-        } catch (XBeeException ex) {
-            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println(Arrays.toString(dataToSend));
-        System.out.println(hora);*/
+        startAcquisitionButton.setEnabled(true);
+        stopAcquisitionButton.setEnabled(false);
+        device.removeDataListener(dataReceive);
     }//GEN-LAST:event_stopAcquisitionButtonActionPerformed
 
     private void startAcquisitionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startAcquisitionButtonActionPerformed
         startAcquisitionButton.setEnabled(false);
-        stopAcquisitionButton.setEnabled(true);        
+        stopAcquisitionButton.setEnabled(true);
         device.addDataListener(dataReceive);
     }//GEN-LAST:event_startAcquisitionButtonActionPerformed
 
@@ -511,6 +499,8 @@ public class Principal extends javax.swing.JFrame {
     }
     
     private void showPrincipal () {
+        startAcquisitionButton.setEnabled(true);
+        stopAcquisitionButton.setEnabled(false);
         this.setVisible(true);
     }
     
@@ -581,7 +571,6 @@ public class Principal extends javax.swing.JFrame {
         for(int i = 0; i < list.size(); i++) {
             try {
                 list.get(i).readDeviceInfo();
-                System.out.println(list.get(i));
             } catch (XBeeException e) {
                 warningTextLabel.setText("ERROR: "+e.getMessage());
             }
