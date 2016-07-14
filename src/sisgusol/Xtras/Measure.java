@@ -24,7 +24,7 @@ public class Measure {
     }
     
     public void createDB (DBInterface database) throws SQLException {
-        database.createTable("CREATE TABLE IF NOT EXISTS `sisgusol`.`measurement` ("
+        database.createTable("CREATE TABLE IF NOT EXISTS `lisson_sisgusol`.`measurement` ("
                             + " `DATE_TIME` DATETIME NOT NULL ,"
                             + " `NODE_ID` VARCHAR(10) NOT NULL ,"
                             + " `64BIT_ADDRESS` VARCHAR(20) NOT NULL ,"
@@ -34,7 +34,7 @@ public class Measure {
     }
     
     public void insertIntoDB (DBInterface database) throws SQLException {
-        database.insert("INSERT INTO `sisgusol`.`measurement` "
+        database.insert("INSERT INTO `lisson_sisgusol`.`measurement` "
                         +"VALUES ('"
                         +dateTime+"', '"
                         +nodeID+"', '"
