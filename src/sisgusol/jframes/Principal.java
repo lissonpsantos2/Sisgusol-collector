@@ -45,6 +45,11 @@ public class Principal extends javax.swing.JFrame {
                                 xbm.getDevice().get64BitAddress().toString(),   //64BITADDRESS
                                 data[0],                                        //MEASUREMENT
                                 new Date());                                    //DATE
+                updateLog(  xbm.getDevice().getNodeID(),                    //NODE ID
+                            data[1],                                        //DEPTH
+                            data[0],                                        //MEASUREMENT
+                            new Date());
+                
                 try {
                     measure.insertIntoDB(database);
                 } catch (SQLException eSQL) {
@@ -110,7 +115,7 @@ public class Principal extends javax.swing.JFrame {
         stopAcquisitionButton = new javax.swing.JButton();
         nodeMACLabellResp = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        logTextArea = new javax.swing.JTextArea();
 
         warningDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         warningDialog.setMinimumSize(new java.awt.Dimension(297, 125));
@@ -343,10 +348,10 @@ public class Principal extends javax.swing.JFrame {
 
         nodeMACLabellResp.setText("NULL");
 
-        jTextArea1.setBackground(new java.awt.Color(240, 240, 240));
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        logTextArea.setBackground(new java.awt.Color(240, 240, 240));
+        logTextArea.setColumns(20);
+        logTextArea.setRows(5);
+        jScrollPane1.setViewportView(logTextArea);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -373,7 +378,7 @@ public class Principal extends javax.swing.JFrame {
                                 .addComponent(nodeIDLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(nodeIDLabelResp)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 201, Short.MAX_VALUE)
                                 .addComponent(acqStatusLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(acqStatusLabelResp))
@@ -504,6 +509,11 @@ public class Principal extends javax.swing.JFrame {
         this.setVisible(true);
     }
     
+    private void updateLog (String NodeID, String depth, String measure, Date dateTime) {
+        SimpleDateFormat logDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        logTextArea.append(logDateFormat.format(dateTime) + "-" + NodeID + ": " + depth + "cm " + measure + "V\n");
+    }
+    
     private void deviceNetworkInfoUpdate () {
         
         loadXBeeNetworkDialog.setVisible(true);
@@ -594,10 +604,10 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton connectButton;
     private javax.swing.JButton detectNetworkButton;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JDialog loadXBeeNetworkDialog;
     private javax.swing.JProgressBar loadingProgressBar;
     public javax.swing.JLabel loadingTextLabel;
+    private javax.swing.JTextArea logTextArea;
     private javax.swing.JLabel networkLabel;
     private javax.swing.JLabel nodeIDLabel;
     private javax.swing.JLabel nodeIDLabelResp;
