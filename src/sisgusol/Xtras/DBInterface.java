@@ -16,8 +16,6 @@ public class DBInterface {
         DBconnection = DriverManager.getConnection("jdbc:mysql://"+DBip+"/"+DBname, DBuser, DBpassword);
         //DBconnection = DriverManager.getConnection("jdbc:mysql://johnny.heliohost.org:3306/lisson_sisgusol","lisson_admin","A10072408");
         stmt = DBconnection.createStatement();
-    //000webhost
-    //biz.nf
     }    
     
     public void createTable (String sql) throws SQLException {
