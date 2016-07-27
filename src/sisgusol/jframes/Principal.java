@@ -40,14 +40,15 @@ public class Principal extends javax.swing.JFrame {
             public void dataReceived(XBeeMessage xbm) {
                 String data[] = xbm.getDataString().split(" ");
                 
-                measure.setData(xbm.getDevice().getNodeID(),                    //NODE ID
-                                data[1],                                        //DEPTH
+                measure.setData(new Date(),                                     //DATETIME
                                 xbm.getDevice().get64BitAddress().toString(),   //64BITADDRESS
-                                data[0],                                        //MEASUREMENT
-                                new Date());                                    //DATE
-                updateLog(  xbm.getDevice().getNodeID(),                    //NODE ID
-                            data[1],                                        //DEPTH
-                            data[0],                                        //MEASUREMENT
+                                xbm.getDevice().getNodeID(),                    //NODE ID
+                                data[1],                                        //M_SENSOR30
+                                data[0]);                                        //M_SENSOR60
+                
+                updateLog(  xbm.getDevice().getNodeID(),                        //NODE ID
+                            data[1],                                            //DEPTH
+                            data[0],                                            //MEASUREMENT
                             new Date());
                 
                 try {
@@ -108,10 +109,8 @@ public class Principal extends javax.swing.JFrame {
         detectNetworkButton = new javax.swing.JButton();
         startAcquisitionButton = new javax.swing.JButton();
         nodeIDLabel = new javax.swing.JLabel();
-        acqStatusLabel = new javax.swing.JLabel();
         nodeMACLabel = new javax.swing.JLabel();
         nodeIDLabelResp = new javax.swing.JLabel();
-        acqStatusLabelResp = new javax.swing.JLabel();
         stopAcquisitionButton = new javax.swing.JButton();
         nodeMACLabellResp = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -331,13 +330,9 @@ public class Principal extends javax.swing.JFrame {
 
         nodeIDLabel.setText("Node ID:");
 
-        acqStatusLabel.setText("Acquisition Status:");
-
         nodeMACLabel.setText("Node MAC:");
 
         nodeIDLabelResp.setText("NULL");
-
-        acqStatusLabelResp.setText("OFF");
 
         stopAcquisitionButton.setText("Stop Acquisition");
         stopAcquisitionButton.addActionListener(new java.awt.event.ActionListener() {
@@ -366,7 +361,7 @@ public class Principal extends javax.swing.JFrame {
                         .addComponent(clockLabel))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(detectNetworkButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
                         .addComponent(startAcquisitionButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(stopAcquisitionButton))
@@ -374,20 +369,18 @@ public class Principal extends javax.swing.JFrame {
                         .addComponent(xbeeNetworkListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(nodeIDLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(nodeIDLabelResp)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 201, Short.MAX_VALUE)
-                                .addComponent(acqStatusLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(acqStatusLabelResp))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(nodeMACLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(nodeMACLabellResp)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane1))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(nodeIDLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(nodeIDLabelResp))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(nodeMACLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(nodeMACLabellResp)))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -403,9 +396,7 @@ public class Principal extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(nodeIDLabel)
-                            .addComponent(nodeIDLabelResp)
-                            .addComponent(acqStatusLabel)
-                            .addComponent(acqStatusLabelResp))
+                            .addComponent(nodeIDLabelResp))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(nodeMACLabel)
@@ -477,12 +468,10 @@ public class Principal extends javax.swing.JFrame {
         if (xbeeNetworkList.getSelectedValue() == null) {
             nodeIDLabelResp.setText(null);
             nodeMACLabellResp.setText(null);
-            acqStatusLabelResp.setText(null);
         }
         else {
             nodeIDLabelResp.setText(xbeeNetworkList.getSelectedValue());
             nodeMACLabellResp.setText(network.getDevice(xbeeNetworkList.getSelectedValue()).get64BitAddress().toString());            
-            acqStatusLabelResp.setForeground(Color.red);
         }
     }//GEN-LAST:event_xbeeNetworkListValueChanged
 
@@ -493,6 +482,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_stopAcquisitionButtonActionPerformed
 
     private void startAcquisitionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startAcquisitionButtonActionPerformed
+        
         startAcquisitionButton.setEnabled(false);
         stopAcquisitionButton.setEnabled(true);
         device.addDataListener(dataReceive);
@@ -511,7 +501,7 @@ public class Principal extends javax.swing.JFrame {
     
     private void updateLog (String NodeID, String depth, String measure, Date dateTime) {
         SimpleDateFormat logDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        logTextArea.append(logDateFormat.format(dateTime) + "-" + NodeID + ": " + depth + "cm " + measure + "V\n");
+        logTextArea.append(logDateFormat.format(dateTime) + "-" + NodeID + ": " + depth + "V " + measure + "V\n");
     }
     
     private void deviceNetworkInfoUpdate () {
@@ -595,8 +585,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField DBNameTextField;
     private javax.swing.JTextField DBPasswordTextField;
     private javax.swing.JTextField DBUserTextField;
-    private javax.swing.JLabel acqStatusLabel;
-    private javax.swing.JLabel acqStatusLabelResp;
     private javax.swing.JComboBox<Integer> baudRateComboBox;
     private javax.swing.JLabel baudRateComboBoxLabel;
     private javax.swing.JButton cancelButton;
