@@ -341,7 +341,7 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="detectNetworkButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="204" max="32767" attributes="0"/>
                       <Component id="startAcquisitionButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="stopAcquisitionButton" min="-2" max="-2" attributes="0"/>
@@ -350,22 +350,22 @@
                       <Component id="xbeeNetworkListScrollPane" min="-2" pref="130" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="nodeIDLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="nodeIDLabelResp" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="201" max="32767" attributes="0"/>
-                              <Component id="acqStatusLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="acqStatusLabelResp" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="jScrollPane1" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Component id="nodeMACLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="nodeMACLabellResp" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="nodeIDLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="nodeIDLabelResp" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Component id="nodeMACLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="nodeMACLabellResp" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane1" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -388,8 +388,6 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="nodeIDLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="nodeIDLabelResp" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="acqStatusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="acqStatusLabelResp" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -462,11 +460,6 @@
         <Property name="text" type="java.lang.String" value="Node ID:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="acqStatusLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Acquisition Status:"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JLabel" name="nodeMACLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Node MAC:"/>
@@ -475,11 +468,6 @@
     <Component class="javax.swing.JLabel" name="nodeIDLabelResp">
       <Properties>
         <Property name="text" type="java.lang.String" value="NULL"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="acqStatusLabelResp">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="OFF"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="stopAcquisitionButton">

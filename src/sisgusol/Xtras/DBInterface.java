@@ -8,13 +8,18 @@ package sisgusol.Xtras;
 import java.sql.*;
 
 public class DBInterface {
+    public String DBip;
+    public String DBname;
+    public String DBuser;
     public Connection DBconnection;
     private final Statement stmt;
     
     public DBInterface (String DBip, String DBname, String DBuser, String DBpassword) throws ClassNotFoundException, SQLException {
+        this.DBip = DBip;
+        this.DBname = DBname;
+        this.DBuser = DBuser;        
         Class.forName("com.mysql.jdbc.Driver");
         DBconnection = DriverManager.getConnection("jdbc:mysql://"+DBip+"/"+DBname, DBuser, DBpassword);
-        //DBconnection = DriverManager.getConnection("jdbc:mysql://johnny.heliohost.org:3306/lisson_sisgusol","lisson_admin","A10072408");
         stmt = DBconnection.createStatement();
     }    
     
