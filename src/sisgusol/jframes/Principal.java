@@ -6,11 +6,10 @@ import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.XBeeNetwork;
 import com.digi.xbee.api.listeners.IDataReceiveListener;
 import com.digi.xbee.api.models.XBeeMessage;
+import com.digi.xbee.api.utils.ByteUtils;
 import gnu.io.CommPortIdentifier;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import static java.lang.Float.parseFloat;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,24 +37,35 @@ public class Principal extends javax.swing.JFrame {
         dataReceive = new IDataReceiveListener() {
             @Override
             public void dataReceived(XBeeMessage xbm) {
+                int rssi = 0;
                 String data[] = xbm.getDataString().split(" ");
+                
+                
+                
+                try {
+                    rssi = -1*ByteUtils.byteArrayToInt(device.getParameter("DB"));
+                } catch (XBeeException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 
                 measure.setData(new Date(),                                     //DATETIME
                                 xbm.getDevice().get64BitAddress().toString(),   //64BITADDRESS
                                 xbm.getDevice().getNodeID(),                    //NODE ID
-                                data[1],                                        //M_SENSOR30
-                                data[0]);                                        //M_SENSOR60
+                                data[0],                                        //M_SENSOR30
+                                data[1],                                        //M_SENSOR60
+                                rssi);                                          //RSSI
                 
                 updateLog(  xbm.getDevice().getNodeID(),                        //NODE ID
-                            data[1],                                            //DEPTH
-                            data[0],                                            //MEASUREMENT
-                            new Date());
-                
+                            data[0],                                            //DEPTH
+                            data[1],                                            //MEASUREMENT
+                            new Date(),
+                            rssi);
                 try {
                     measure.insertIntoDB(database);
                 } catch (SQLException eSQL) {
                     showWarningDialog("ERROR: "+ eSQL.getMessage());
                 }
+                
             }
         };
         
@@ -499,9 +509,9 @@ public class Principal extends javax.swing.JFrame {
         this.setVisible(true);
     }
     
-    private void updateLog (String NodeID, String depth, String measure, Date dateTime) {
-        SimpleDateFormat logDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        logTextArea.append(logDateFormat.format(dateTime) + "-" + NodeID + ": " + depth + "V " + measure + "V\n");
+    private void updateLog (String NodeID, String depth, String measure, Date dateTime, int rssi) {
+        SimpleDateFormat logDateFormat = new SimpleDateFormat("dd/MM HH:mm:ss");
+        logTextArea.append(logDateFormat.format(dateTime) + "-" + NodeID + ": " + depth + "V " + measure + "V  " + rssi + "dBm\n");
     }
     
     private void deviceNetworkInfoUpdate () {
